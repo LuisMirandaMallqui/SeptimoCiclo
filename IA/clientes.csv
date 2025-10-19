@@ -1,0 +1,8 @@
+ID,Nombre,Edad,Ingresos,Ciudad,Género,Gastos,Deuda,Aprobado
+1,Ana,25,2500,Lima,F,1200,0,Sí
+2,Juan,40,0,Cusco,M,2000,1,No
+3,María,35,3500,Lima,F,0,0,Sí
+4,Luis,28,3000,Arequipa,M,1500,1,Sí
+5,Sofía,0,4000,Lima,F,1800,0,Sí
+6,Pedro,50,2500,Cusco,M,0,1,No
+7,Rosa,33,2800,Arequipa,F,1000,0,No

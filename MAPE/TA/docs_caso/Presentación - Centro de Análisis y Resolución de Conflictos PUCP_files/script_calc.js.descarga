@@ -1,0 +1,97 @@
+﻿  $(document).ready(function(){ 
+    $('#cal-monto').show();
+    $('#cal-result').hide();
+    $('#click1').show();
+    $('#click2').hide();
+	$('#leyenda').hide();
+	  
+    $('#click1').click( function(e){
+	  var monto = $('#monto').val().replace(/,/g, '');
+	  var id = $(this).data( "idpage" );
+	  $('#monto_error').html("");
+	  
+	  if(!monto) $('#monto_error').html("Debe ingresar el valor.");
+	  else if(monto<=2900000) $('#monto_error').html("Debe ingresar un valor mayor a 2'900,000.");
+	  else if(monto>80000000) $('#monto_error').html("Debe ingresar un valor menor a 80´000,000.");
+	  else{
+		var str = '&monto=' + monto + '&id=' + id + '&action=tarifario_arbitraje';    
+		$.ajax({
+		  type: "POST",
+		  dataType: "json",
+		  url: ajaxurl,
+		  data: str,
+		  success: function (response) {
+			var tap =  response.tap;
+			var tapigv =  response.tapigv;
+			var taptotal =  response.taptotal;
+			var au =  response.au;
+			var ht =  response.ht;			
+				        
+			$('#tac').html('S/ ' + parseFloat(tap).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			$('#tacigv').html('S/ ' + parseFloat(tapigv).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			$('#tactotal').html('S/ ' + parseFloat(taptotal).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			
+			$('#hau').html('S/ ' + parseFloat(au).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			$('#hauigv').html('IL');
+			$('#hautotal').html('S/ ' + parseFloat(au).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' + IL' );			
+			
+			$('#hta').html('S/ ' + parseFloat(ht).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			$('#htaigv').html('IL');
+			$('#htatotal').html('S/ ' + parseFloat(ht).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' + IL' );
+			
+			$('#cal-monto').hide();
+			$('#cal-result').show();
+			$('#click1').hide();
+			$('#click2').show();
+			$('#leyenda').show();
+
+		  },
+		  error: function (jqXHR, textStatus, errorThrown) {
+			 $loader.html(jqXHR + " :: " + textStatus + " :: " + errorThrown);
+		  }
+		});
+	  }
+
+    });
+	  
+	$('#click2').click( function(e){
+	  $('#cal-monto').show();
+	  $('#cal-result').hide();
+	  $('#click1').show();
+	  $('#click2').hide();
+	  $('#leyenda').hide();
+	  $('#monto').val("");
+	});
+	
+	$('#click2').hover(function(){
+	  $(this).css('background-color','#34c8cf');
+	  $(this).css('border-color','#34c8cf');
+	  }, function(){
+	  $(this).css('background-color','#0992AE');
+	  $(this).css('border-color','#0992AE');
+	});
+	
+	$('.btn-close').click( function(e){
+	  $('#cal-monto').show();
+	  $('#cal-result').hide();
+	  $('#click1').show();
+	  $('#click2').hide();
+	  $('#monto').val("");
+	  $('#leyenda').hide();
+	});
+	
+	$('#monto').keyup(function(event){
+      if(event.which >= 37 && event.which <= 40){ event.preventDefault(); }
+      var $this = $(this);
+      var num = $this.val().replace(/,/gi, "").split("").reverse().join("");
+      var num2 = RemoveRougeChar(num.replace(/(.{3})/g,"$1,").split("").reverse().join(""));
+      $this.val(num2);
+	});
+});	
+
+function RemoveRougeChar(convertString){
+  if(convertString.substring(0,1) == ","){
+    return convertString.substring(1, convertString.length)            
+  }
+  return convertString;  
+}
